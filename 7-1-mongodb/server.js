@@ -98,6 +98,7 @@
          npm i
          OR
          npm install
+         
          npm install mongoose
 
    If your system blocks running npm commands (especially on Windows PowerShell),
@@ -189,7 +190,7 @@ import mongoose from "mongoose";
 // Replace this with your real Atlas connection string before running.
 const MONGO_URI =
   process.env.MONGO_URI ||
-  "mongodb+srv://YOUR_USERNAME:YOUR_PASSWORD@cluster0.xxxxx.mongodb.net/TestDB?retryWrites=true&w=majority&appName=Cluster0";
+  "mongodb+srv://cluster0.7ylgntm.mongodb.net/" --apiVersion 1 --username DanahAlalwan;
 
 // define schema
 const studentSchema = new mongoose.Schema({
