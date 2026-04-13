@@ -184,21 +184,73 @@
  *  This is the default behavior of Mongoose.
  */
 
-// import mongoose
+import mongoose from "mongoose";
 
-// establish connection
-
+// Replace this with your real Atlas connection string before running.
+const MONGO_URI =
+  process.env.MONGO_URI ||
+  "mongodb+srv://YOUR_USERNAME:YOUR_PASSWORD@cluster0.xxxxx.mongodb.net/TestDB?retryWrites=true&w=majority&appName=Cluster0";
 
 // define schema
+const studentSchema = new mongoose.Schema({
+  name: String,
+  age: Number,
+  major: String,
+});
 
+const Student = mongoose.model("Student", studentSchema);
 
 // create document
+async function createStudents() {
+  await Student.deleteMany({ name: { $in: ["Ali", "Sara"] } });
 
+  await Student.insertMany([
+    { name: "Ali", age: 21, major: "CS" },
+    { name: "Sara", age: 23, major: "SE" },
+  ]);
+
+  console.log("✅ Inserted students");
+}
 
 // read document
-
+async function readStudents() {
+  const all = await Student.find();
+  console.log("📄 All students:");
+  console.log(all);
+}
 
 // update document
-
+async function updateStudent() {
+  await Student.updateOne({ name: "Ali" }, { age: 22 });
+  console.log("✅ Updated Ali");
+}
 
 // delete document
+async function deleteStudent() {
+  await Student.deleteOne({ name: "Sara" });
+  console.log("✅ Deleted Sara");
+}
+
+// establish connection and run all TODOs in order
+async function main() {
+  try {
+    await mongoose.connect(MONGO_URI);
+    console.log("✅ Connected to MongoDB");
+
+    await createStudents();
+    await readStudents();
+    await updateStudent();
+    await deleteStudent();
+
+    const finalStudents = await Student.find();
+    console.log("📌 Final students collection:");
+    console.log(finalStudents);
+  } catch (error) {
+    console.error("❌ Error:", error.message);
+  } finally {
+    await mongoose.connection.close();
+    console.log("🔌 Disconnected from MongoDB");
+  }
+}
+
+main();
